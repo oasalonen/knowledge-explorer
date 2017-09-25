@@ -1,0 +1,10 @@
+{
+  "attributes":[
+    {"name":"person", "type":"Composite"},
+    {"name":"person.first_name", "type":"String", "synonyms":"first_name.syn"},
+    {"name":"person.last_name", "type":"String", "synonyms":"last_name.syn"},
+    {"name":"type", "type":"String", "synonyms":"type.syn"},
+    {"name":"start", "type":"Date"},
+    {"name":"end", "type":"Date"}
+  ]
+}

@@ -1,0 +1,105 @@
+<grammar root="GetAbsences">
+    <import schema="schema.json" name="absences"/>
+
+    <rule id="GetAbsences">
+        <example>sick leaves from Olli Salonen</example>
+
+        <tag>
+            yearOnce = false;
+            isBeyondEndOfQuery = false;
+            query = All();
+        </tag>
+
+        <item repeat="1-" repeat-logprob="-10">
+            <tag>AssertEquals(isBeyondEndOfQuery, false);</tag>
+
+            <ruleref uri="FilterBy" name="filter"/>
+
+            <tag>
+                query = And(query, filter);
+            </tag>
+
+            <tag>isBeyondEndOfQuery = GetVariable("IsBeyondEndOfQuery", "system");</tag>
+        </item>
+        <tag>out = query;</tag>
+    </rule>
+
+    <rule id="FilterBy">
+        <tag>
+            filter = All();
+        </tag>
+        <one-of>
+            <item>
+                <ruleref uri="FilterByAbsenceType" name="filter"/>
+            </item>
+
+            <item>
+                <ruleref uri="FilterByPerson" name="filter"/>
+            </item>
+
+            <item>
+                <ruleref uri="FilterByDate" name="filter"/>
+            </item>
+        </one-of>
+        <tag>
+            out = filter;
+        </tag>
+    </rule>
+
+    <rule id="FilterByAbsenceType">
+        <tag>
+            type = All();
+        </tag>
+        <one-of>
+            <item>
+                all absences
+            </item>
+
+            <item>
+                <attrref uri="absences#type" name="type"/>
+            </item>
+        </one-of>
+        <tag>
+            out = type;
+        </tag>
+    </rule>
+
+    <rule id="FilterByPerson">
+        <tag>
+            person = All();
+        </tag>
+        from
+        <item>
+            <attrref uri="absences#person.first_name" name="firstName"/>
+            <tag>
+                person = firstName;
+            </tag>
+
+            <item repeat="1">
+                <attrref uri="absences#person.last_name" name="lastName"/>
+                <tag>
+                    person = And(firstName, lastName);
+                </tag>
+            </item>
+            <tag>
+                person = Composite(person);
+            </tag>
+        </item>
+        <tag>
+            out = person;
+        </tag>
+    </rule>
+
+    <rule id="FilterByDate">
+        <tag>
+            date = All();
+        </tag>
+        after
+        <item>
+            <attrref uri="absences#start" op="gt" name="date"/>
+        </item>
+        <tag>
+            out = date;
+        </tag>
+    </rule>
+</grammar>
