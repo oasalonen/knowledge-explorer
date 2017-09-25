@@ -2,6 +2,7 @@ import csv
 import json
 import time
 import argparse
+import os
 
 DATA_DIR = "data/"
 
@@ -19,8 +20,15 @@ KEY_END = "end"
 KEY_FIRST_NAME = "first_name"
 KEY_LAST_NAME = "last_name"
 
-def data_path(filename):
+def data_path(filename=""):
     return DATA_DIR + filename
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Prepare absence data for KES indexing')
+    parser.add_argument('data_file',
+                        type=str,
+                        help='CSV file containing absence data to preprocess for KES')
+    return parser.parse_args()
 
 def convert_date(datetime_string):
     dt = time.strptime(datetime_string, "%d.%m.%Y %H:%M")
@@ -38,11 +46,10 @@ def synonym_data(items):
     single_synonyms = [[i[0], j] for i in expanded_synonyms for j in i[1:]]
     return "\n".join([json.dumps(i) for i in single_synonyms])
 
-parser = argparse.ArgumentParser(description='Prepare absence data for KES indexing')
-parser.add_argument('data_file',
-                    type=str,
-                    help='CSV file containing absence data to preprocess for KES')
-args = parser.parse_args()
+args = parse_arguments()
+
+if not os.path.exists(data_path()):
+    os.makedirs(data_path())
 
 with open(args.data_file, 'r') as f:
     reader  = csv.reader(f, delimiter=';')
