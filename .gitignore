@@ -1,5 +1,2 @@
-*.index
-*.grammar
-data.json
 .idea
-*.syn
+data/
