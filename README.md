@@ -15,7 +15,7 @@ The code consists of three modules:
 3. A UWP client in the ```client/``` directory that can be used to test the locally running server.
 
 ## Preprocessing the data
-First download the absence information from Planmill and export it to a ```;``` delimited CSV. The in the ```backend``` folder, run
+First download the absence information from Planmill and export it to a ```;``` delimited CSV. Then, in the ```backend``` folder, run
 ```
 python absences.py PATH_TO_ABSENCE_CSV_FILE
 ```
