@@ -1,6 +1,7 @@
 import csv
 import json
 import time
+import argparse
 
 DATA_DIR = "data/"
 
@@ -37,7 +38,13 @@ def synonym_data(items):
     single_synonyms = [[i[0], j] for i in expanded_synonyms for j in i[1:]]
     return "\n".join([json.dumps(i) for i in single_synonyms])
 
-with open(data_path('absences.csv'), 'r') as f:
+parser = argparse.ArgumentParser(description='Prepare absence data for KES indexing')
+parser.add_argument('data_file',
+                    type=str,
+                    help='CSV file containing absence data to preprocess for KES')
+args = parser.parse_args()
+
+with open(args.data_file, 'r') as f:
     reader  = csv.reader(f, delimiter=';')
     raw_absences = list(reader)
 
